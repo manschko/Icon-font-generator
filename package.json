@@ -1,0 +1,38 @@
+{
+  "name": "font-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write src/**/*.ts",
+    "format:check": "prettier src/**/*.ts",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint --fix src/**/*.ts",
+    "test": "jest",
+    "prepare" : "npm run build",
+    "prepublishOnly" : "npm test && npm run lint",
+    "preversion" : "npm run lint",
+    "version" : "npm run format && git add -A src",
+    "postversion" : "git push && git push --tags"
+  },
+  "files": ["lib/**/*"],
+  "author": "Manschko",
+  "license": "MIT",
+  "description": "Library for creating a subset of a font file to reduce the file size to the only needed glyphs.",
+  "dependencies": {
+    "fonteditor-core": "^2.4.1",
+    "wawoff2": "^2.0.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "@typescript-eslint/eslint-plugin": "^8.14.0",
+    "@typescript-eslint/parser": "^8.14.0",
+    "eslint": "^9.15.0",
+    "globals": "^15.12.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.14.0"
+  }
+}
