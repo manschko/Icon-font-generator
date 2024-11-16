@@ -106,3 +106,23 @@ export async function createFontSubset(ttfBuffer: Uint8Array, glyphsToKeep: stri
         throw new Error(`Font subsetting failed: ${error.message}`);
     }
 }
+
+/**
+ * Converts a TTF buffer to WOFF2 format and saves it to a file
+ * @param {Buffer} ttfBuffer - The TTF font buffer
+ * @param {string} outputPath - Path where the WOFF2 file should be saved
+ * @returns {Promise<Uint8Array>} - The WOFF2 buffer
+ */
+export async function convertTtfToWoff2(ttfBuffer: Buffer, outputPath: string): Promise<Uint8Array> {
+    try {
+        // Convert TTF to WOFF2
+        const woff2Buffer = await wawoff2.compress(ttfBuffer);
+
+        // Save the WOFF2 file
+        await fs.writeFile(outputPath, woff2Buffer);
+
+        return woff2Buffer;
+    } catch (error: any) {
+        throw new Error(`TTF to WOFF2 conversion failed: ${error.message}`);
+    }
+}
