@@ -1,0 +1,22 @@
+{
+  "name": "icon-font-generator",
+  "version": "1.0.0",
+  "description": "icon font Generation form svg mainly used to generate a subset font of Material symbols",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manschko/Icon-font-generator.git"
+  },
+  "author": "manschko",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/manschko/Icon-font-generator/issues"
+  },
+  "homepage": "https://github.com/manschko/Icon-font-generator#readme",
+  "devDependencies": {
+    "typescript": "^5.8.2"
+  }
+}
