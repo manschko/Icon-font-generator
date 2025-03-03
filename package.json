@@ -1,12 +1,11 @@
 {
   "name": "icon-font-generator",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "icon font Generation form svg mainly used to generate a subset font of Material symbols",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
-
   },
   "files": [
     "dist/**/*"
@@ -22,11 +21,14 @@
   },
   "homepage": "https://github.com/manschko/Icon-font-generator#readme",
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@types/svg2ttf": "^5.0.3",
+    "@types/ttf2woff": "^2.0.4",
     "typescript": "^5.8.2"
   },
   "dependencies": {
     "@material-symbols/svg-400": "^0.28.2",
+    "js-yaml": "^4.1.0",
     "svg2ttf": "^6.0.3",
     "svgicons2svgfont": "^15.0.1",
     "ttf2woff": "^3.0.0",

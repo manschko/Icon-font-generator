@@ -1,23 +1,23 @@
 import * as fs from 'fs';
-import * as path from 'path';
-import traverseDirectory from "../utils/traverseDirectory";
+import { saveListToTxt, traverseDirectory } from '../utils/file_utils';
 
 
-const defaultFileName = 'AngularMaterialIcons.txt';
+const defaultFileName = 'AngularMaterialIcons_App.txt';
 
 export default function analyzeAngularMaterial(paths: string[], outputPath?: string): string[] {
     const iconNamesSet = new Set<string>();
     paths.forEach((path) => {
         console.log(`🔍Analyzing Angular Material icons in: ${path}`);
         traverseDirectory(path, (filePath) => {
+            if(!filePath.endsWith('.html') && !filePath.endsWith('.ts')){
+                return;
+            }
             const icons = extractIconNames(filePath);
             icons.forEach(icon => iconNamesSet.add(icon));
         });
     });
-    if(outputPath) {
-        const resolvedOutputPath = path.resolve(outputPath);
-        const finalOutputPath = path.extname(resolvedOutputPath) ? resolvedOutputPath : path.join(resolvedOutputPath, defaultFileName);
-        fs.writeFileSync(finalOutputPath, Array.from(iconNamesSet).join('\n'), 'utf-8');
+    if (outputPath) {
+        saveListToTxt(outputPath, defaultFileName, Array.from(iconNamesSet));
     }
 
     return Array.from(iconNamesSet);
@@ -42,7 +42,7 @@ function extractIconNames(filePath: string): string[] {
     }
 
     // Extract text content within <mat-icon> tags
-    while ((match = matIconTextRegex.exec(content)) !== null) {
+    while ((match = matIconTextRegex.exec(content)) !== null && !match[1].startsWith('{{')) {
         iconNames.push(match[1].trim());
     }
 

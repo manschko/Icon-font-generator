@@ -1,25 +1,38 @@
-import {SVGIcons2SVGFontStream} from "svgicons2svgfont";
-import path from "path";
-import fs from "fs";
+import { SVGIcons2SVGFontStream } from 'svgicons2svgfont';
+import path from 'path';
+import fs from 'fs';
+import { createFontFiles } from './utils/font_utils';
 
-
-const svgSourceDir = './node_modules/@material-symbols/svg-400/outlined';
 
 type Options = {
     fontName?: string;
     normalize?: boolean;
     centerHorizontally?: boolean;
     centerVertically?: boolean;
+    svgSourceDir?: string;
+    outputDir?: string;
+    ttf?: boolean
+    woff?: boolean;
+    woff2?: boolean;
 }
-function generateMaterialSymbolsFont(symbols: string[], options:Options = {}): Promise<Buffer> {
+
+function generateFontBufferFromSvg(symbols: string[], options: Options = {}): Promise<Buffer> {
     return new Promise((resolve, reject) => {
         const {
-            fontName = 'Material Icons',
+            fontName = 'Custom Icon Font',
             normalize = true,
             centerHorizontally = true,
-            centerVertically = true
+            centerVertically = true,
+            svgSourceDir = '',
+            outputDir = '.',
+            woff = true,
+            woff2 = true
         } = options;
 
+        if (!svgSourceDir) {
+            console.error('❗SVG source directory is required');
+            reject('SVG source directory is required');
+        }
 
         const fontStream = new SVGIcons2SVGFontStream({
             fontName: fontName,
@@ -29,13 +42,13 @@ function generateMaterialSymbolsFont(symbols: string[], options:Options = {}): P
 
         });
 
-        let svgFont = '';
+        const chunks: Buffer[] = [];
         fontStream.on('data', data => {
-            svgFont += data.toString();
+            chunks.push(data);
         });
 
         fontStream.on('end', () => {
-            resolve(svgFont);
+            resolve(Buffer.concat(chunks));
         });
 
         fontStream.on('error', error => {
@@ -53,7 +66,7 @@ function generateMaterialSymbolsFont(symbols: string[], options:Options = {}): P
             const svgPath = path.join(__dirname, svgSourceDir, `${symbolName}.svg`);
 
             if (!fs.existsSync(svgPath)) {
-                console.warn(`SVG file not found: ${svgPath}`);
+                console.warn(`⚠️SVG file not found: ${svgPath}`);
                 pendingSymbols--;
                 if (pendingSymbols === 0) fontStream.end();
                 return;
@@ -62,7 +75,7 @@ function generateMaterialSymbolsFont(symbols: string[], options:Options = {}): P
             const glyph = fs.createReadStream(svgPath);
 
             // Add metadata for the glyph
-            glyph.metadata = {
+            (glyph as any).metadata = {
                 unicode: [symbolName],
                 name: symbolName,
             };
@@ -74,5 +87,31 @@ function generateMaterialSymbolsFont(symbols: string[], options:Options = {}): P
                 if (pendingSymbols === 0) fontStream.end();
             });
         });
+    });
+}
+
+function generateMaterialSymbolsFont(symbols: string[], options: Options = {}): void {
+    const {
+        fontName = 'Material Icons',
+        normalize = true,
+        centerHorizontally = true,
+        centerVertically = true,
+        svgSourceDir = './node_modules/@material-symbols/svg-400/outlined',
+        outputDir = '.',
+        ttf = true,
+        woff = true,
+        woff2 = true
+    } = options;
+    generateFontBufferFromSvg(symbols, {
+        fontName,
+        normalize,
+        centerHorizontally,
+        centerVertically,
+        svgSourceDir,
+        outputDir,
+        woff,
+        woff2
+    }).then(fontBuffer => {
+        createFontFiles(fontName, fontBuffer, outputDir, ttf, woff, woff2);
     });
 }
