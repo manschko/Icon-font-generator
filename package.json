@@ -4,8 +4,13 @@
   "description": "icon font Generation form svg mainly used to generate a subset font of Material symbols",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+
   },
+  "files": [
+    "dist/**/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/manschko/Icon-font-generator.git"
@@ -17,6 +22,14 @@
   },
   "homepage": "https://github.com/manschko/Icon-font-generator#readme",
   "devDependencies": {
+    "@types/svg2ttf": "^5.0.3",
     "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "@material-symbols/svg-400": "^0.28.2",
+    "svg2ttf": "^6.0.3",
+    "svgicons2svgfont": "^15.0.1",
+    "ttf2woff": "^3.0.0",
+    "ttf2woff2": "^6.0.1"
   }
 }
